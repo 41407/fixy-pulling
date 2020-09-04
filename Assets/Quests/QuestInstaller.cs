@@ -9,7 +9,7 @@ public class QuestInstaller : MonoInstaller
     {
         Container.Bind<ILocation>().FromComponentsInHierarchy().AsSingle();
         Container.Bind<IQuestJournal>().To<QuestJournal>().AsSingle();
-        Container.Bind<IAvailableQuestView>().FromComponentInChildren().AsTransient();
+        Container.Bind<IQuestView>().FromComponentInChildren().AsTransient();
         Container.Bind<QuestLocations>().FromNewComponentOnNewGameObject().AsSingle().NonLazy();
     }
 }

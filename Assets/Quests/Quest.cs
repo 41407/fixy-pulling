@@ -34,6 +34,6 @@ namespace Quests
             }
         }
 
-        public override string ToString() => $"Delivery from {Source} to {Destination} for {Reward}!";
+        public override string ToString() => $"{(Completed ? "COMPLETED: " : "")} Delivery from {Source} to {Destination} for {Reward}!";
     }
 }

@@ -46,5 +46,12 @@ namespace Quests
         {
             Quests.FindAll(q => !q.Completed && q.Destination == location).ForEach(q => q.Complete());
         }
+
+        public override string ToString()
+        {
+            var output = "";
+            Quests.ForEach(q => output += q.ToString() + '\n');
+            return output;
+        }
     }
 }

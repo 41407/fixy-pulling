@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Fixy;
-using UnityEngine;
+﻿using Fixy;
 using Zenject;
 
 public class FixyInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {
+        Container.Bind<IPlayerPosition>().FromComponentInHierarchy().AsSingle();
         Container.Bind<IWheel>().FromComponentsInChildren().AsSingle();
     }
 }

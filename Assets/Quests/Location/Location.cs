@@ -14,7 +14,7 @@ namespace Quests.Location
     public class Location : MonoBehaviour, ILocation
     {
         [SerializeField] private string locationName;
-        [Inject] private IAvailableQuestView questView;
+        [Inject] private IQuestView questView;
 
         private IQuest Quest { get; set; }
         public bool HasActiveQuest => Quest != null;
