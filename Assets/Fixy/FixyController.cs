@@ -15,6 +15,7 @@ public class FixyController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GetComponent<PhotonView>().isMine == false) return;
         Time.timeScale = timeScale;
         HandleInput();
         speed += pedaling;

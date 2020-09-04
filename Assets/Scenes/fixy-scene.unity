@@ -561,15 +561,5 @@ PrefabInstance:
       propertyPath: instantiationId
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 591054699447774741, guid: 92d581a12b1e07c4e9e48ebe928ff929,
-        type: 3}
-      propertyPath: ObservedComponents.Array.data[0]
-      value: 
-      objectReference: {fileID: 1980822747}
-    - target: {fileID: 591054699447774741, guid: 92d581a12b1e07c4e9e48ebe928ff929,
-        type: 3}
-      propertyPath: synchronization
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92d581a12b1e07c4e9e48ebe928ff929, type: 3}
