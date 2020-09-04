@@ -1,7 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Fixy;
+using UnityEngine;
+using Zenject;
 
 public class FixyController : MonoBehaviour
 {
+    [Inject] private List<IWheel> Wheels { get; }
+
     [SerializeField] private Vector2 sensitivity = Vector2.one;
 
     private float steering;
@@ -33,6 +38,7 @@ public class FixyController : MonoBehaviour
     private void Push()
     {
         transform.Translate(0, 0, speed * Time.fixedDeltaTime);
+        Wheels.ForEach(wheel => wheel.SetSpeed(speed));
     }
 
     private void Turn()
