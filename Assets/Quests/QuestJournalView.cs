@@ -16,7 +16,12 @@ namespace Quests
             text = GetComponentInChildren<TextMeshProUGUI>();
         }
 
-        private void Update()
+        private void OnEnable()
+        {
+            InvokeRepeating("Refresh", 2, 2);
+        }
+
+        private void Refresh()
         {
             text.text = questJournal.ToString();
         }

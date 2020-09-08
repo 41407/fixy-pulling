@@ -7,5 +7,6 @@ public class FixyInstaller : MonoInstaller
     {
         Container.Bind<IPlayerPosition>().FromComponentInHierarchy().AsSingle();
         Container.Bind<IWheel>().FromComponentsInChildren().AsSingle();
+        Container.Bind<IFork>().FromComponentsInChildren().AsSingle();
     }
 }

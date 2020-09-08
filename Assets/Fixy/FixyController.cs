@@ -13,20 +13,16 @@ public class FixyController : MonoBehaviour
     private float pedaling;
     private float speed;
     [SerializeField, Range(0f, 1f)] private float timeScale = 0.3f;
-    [SerializeField, Range(1f, 5f)] private float steeringAngleCoefficient = 1f;
-    [SerializeField] private Transform fork;
+    [SerializeField, Range(0.0001f, 5f)] private float steeringAngleCoefficient = 1f;
+    [Inject] private IFork fork;
 
     private float MaximumSteering => Time.deltaTime * sensitivity.x;
 
     private void FixedUpdate()
     {
-        Time.timeScale = timeScale;
         HandleInput();
-        speed += pedaling;
-        if (speed > 20) speed = 20;
         Steer();
         Turn();
-
         Push();
     }
 
@@ -37,17 +33,36 @@ public class FixyController : MonoBehaviour
 
     private void Push()
     {
+        speed += pedaling;
+        if (speed > 20) speed = 20;
+
         transform.Translate(0, 0, speed * Time.fixedDeltaTime);
         Wheels.ForEach(wheel => wheel.SetSpeed(speed));
     }
 
     private void Turn()
     {
-        var angularSpeed = -Vector3.SignedAngle(Vector3.up, transform.up, transform.forward) * steeringAngleCoefficient * Mathf.Clamp01(speed) * Time.fixedDeltaTime;
+        var rollAngle = -Vector3.SignedAngle(Vector3.up, transform.up, transform.forward);
+        var speedCoefficient = Mathf.Clamp01(speed);
+        var angularSpeed = rollAngle * steeringAngleCoefficient * speedCoefficient;
 
-        transform.Rotate(0, Mathf.Sign(angularSpeed) * Mathf.Abs(Mathf.Pow(angularSpeed, 2f)), 0, Space.Self);
-        transform.Rotate(0, 0, Mathf.Clamp(angularSpeed, -MaximumSteering / 2f, MaximumSteering / 2f), Space.Self);
-        fork.localRotation = Quaternion.Euler(fork.localRotation.eulerAngles.x, angularSpeed * 10f, fork.localRotation.eulerAngles.z);
+        var turnRate = Mathf.Sign(angularSpeed) * Mathf.Abs(Mathf.Pow(angularSpeed, 2f)) * Time.fixedDeltaTime;
+        var rollReduction = Mathf.Clamp(angularSpeed, -MaximumSteering / 2f, MaximumSteering / 2f);
+
+        Turn(turnRate);
+        StraightenRoll(rollReduction);
+
+        fork.SetAngle(turnRate * 3f * Mathf.Max(1f, 20f - speed));
+    }
+
+    private void StraightenRoll(float rollReduction)
+    {
+        transform.Rotate(0, 0, rollReduction, Space.Self);
+    }
+
+    private void Turn(float turnRate)
+    {
+        transform.Rotate(0, turnRate, 0, Space.Self);
     }
 
     void HandleInput()
