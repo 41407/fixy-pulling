@@ -12,11 +12,11 @@ namespace Quests.Location
 
     public class QuestView : MonoBehaviour, IQuestView
     {
-        [Inject] private IPlayerPosition player { get; }
+        [Inject] private IPlayerPosition Player { get; }
 
         private void Update()
         {
-            transform.LookAt(player.Position);
+            transform.LookAt(Player.Position);
         }
 
         public void Show(string text)

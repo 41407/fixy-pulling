@@ -1,12 +1,15 @@
-﻿using Fixy;
-using Zenject;
+﻿using Zenject;
 
-public class FixyInstaller : MonoInstaller
+namespace Fixy
 {
-    public override void InstallBindings()
+    public class FixyInstaller : MonoInstaller
     {
-        Container.Bind<IPlayerPosition>().FromComponentInHierarchy().AsSingle();
-        Container.Bind<IWheel>().FromComponentsInChildren().AsSingle();
-        Container.Bind<IFork>().FromComponentsInChildren().AsSingle();
+        public override void InstallBindings()
+        {
+            Container.Bind<IFixyController>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<IPlayerPosition>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<IWheel>().FromComponentsInChildren().AsSingle();
+            Container.Bind<IFork>().FromComponentsInChildren().AsSingle();
+        }
     }
 }

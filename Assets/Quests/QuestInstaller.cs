@@ -1,15 +1,16 @@
-using Quests;
 using Quests.Location;
-using UnityEngine;
 using Zenject;
 
-public class QuestInstaller : MonoInstaller
+namespace Quests
 {
-    public override void InstallBindings()
+    public class QuestInstaller : MonoInstaller
     {
-        Container.Bind<ILocation>().FromComponentsInHierarchy().AsSingle();
-        Container.Bind<IQuestJournal>().To<QuestJournal>().AsSingle();
-        Container.Bind<IQuestView>().FromComponentInChildren().AsTransient();
-        Container.Bind<QuestLocations>().FromNewComponentOnNewGameObject().AsSingle().NonLazy();
+        public override void InstallBindings()
+        {
+            Container.Bind<ILocation>().FromComponentsInHierarchy().AsSingle();
+            Container.Bind<IQuestJournal>().To<QuestJournal>().AsSingle();
+            Container.Bind<IQuestView>().FromComponentInChildren().AsTransient();
+            Container.Bind<QuestLocations>().FromNewComponentOnNewGameObject().AsSingle().NonLazy();
+        }
     }
 }
