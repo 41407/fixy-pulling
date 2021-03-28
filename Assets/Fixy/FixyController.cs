@@ -10,22 +10,24 @@ namespace Fixy
 
         [SerializeField] private Vector2 sensitivity = Vector2.one;
         [SerializeField] private AnimationCurve rollingResistanceAcceleration;
-        [SerializeField] private AnimationCurve mashingAccelerationOverTime;
-        [SerializeField] private float mashingForce = 10f;
 
-        private float mashingTimer;
         private float steering;
         private float pedalingInput;
         private float speed;
         [SerializeField, Range(0.0001f, 5f)] private float steeringAngleCoefficient = 1f;
         [Inject] private IFork fork;
-        [SerializeField] private AnimationCurve skiddingAcceleration;
+        [Inject] private IRearWheel rearWheel;
+        [Inject] private IDrivetrain drivetrain;
+        [SerializeField] private AnimationCurve pedalingStrengthOverCadence = AnimationCurve.Constant(0, 90, 1f);
+
+        [SerializeField] private float pedalingStrength = 0.1f;
 
         private float MaximumSteering => Time.deltaTime * sensitivity.x;
 
+        private float PedalingForce => pedalingInput * CurrentPedalingStrength * Mathf.Clamp(drivetrain.GetCrankAnglePedalingStrengthModifier(), 0.1f, 1f);
 
-        private bool IsSkidding { get; set; }
-        private bool IsMashing => mashingAccelerationOverTime.Evaluate(mashingTimer) > 0.5f;
+        private float CurrentPedalingStrength => pedalingStrength * pedalingStrengthOverCadence.Evaluate(drivetrain.GetCurrentCadence(rearWheel));
+
         private bool IsPedalingBackwards => pedalingInput < 0;
         private bool IsPedalingForward => pedalingInput > 0;
 
@@ -48,33 +50,19 @@ namespace Fixy
         {
             if (IsPedalingForward)
             {
-                IsSkidding = false;
-                mashingTimer += Time.fixedDeltaTime;
-                speed += pedalingInput;
-                speed += mashingAccelerationOverTime.Evaluate(mashingTimer) * mashingForce * Time.fixedDeltaTime;
+                speed += PedalingForce;
             }
             else if (IsPedalingBackwards)
             {
-                if (IsMashing)
-                {
-                    IsSkidding = true;
-                }
-
-                if (IsSkidding)
-                {
-                    speed -= skiddingAcceleration.Evaluate(speed) * Time.fixedDeltaTime;
-                }
-            }
-
-            if (!IsPedalingForward && !IsPedalingBackwards)
-            {
-                IsSkidding = false;
+                speed += PedalingForce / 2f;
             }
 
             speed -= rollingResistanceAcceleration.Evaluate(speed) * Time.fixedDeltaTime;
 
             transform.Translate(0, 0, speed * Time.fixedDeltaTime);
             Wheels.ForEach(wheel => wheel.SetSpeed(speed));
+
+            drivetrain.SetCrankAngle(rearWheel);
         }
 
         private void Turn()

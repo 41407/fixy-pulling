@@ -19,7 +19,14 @@ namespace HUD
 
         private void Update()
         {
-            text.text = fixyController.GetSpeed().ToString("0.0 m/s", CultureInfo.InvariantCulture);
+            text.text = ToKilometersPerHour(GetSpeed()).ToString("0.0 km/h", CultureInfo.InvariantCulture);
         }
+
+        private float GetSpeed()
+        {
+            return fixyController.GetSpeed();
+        }
+
+        private static float ToKilometersPerHour(float metersPerSecond) => metersPerSecond * 3.6f;
     }
 }
