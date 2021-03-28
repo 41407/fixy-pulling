@@ -16,6 +16,7 @@ namespace Fixy
         {
             Image.color = new Color(1f, 1f, 1f, Mathf.Clamp(Drivetrain.GetCrankAnglePedalingStrengthModifier(), 0.2f, 1f));
             Rect.rotation = Quaternion.AngleAxis(Drivetrain.GetCrankAngle(), Vector3.back);
+            transform.localScale = Vector3.one * (Drivetrain.MashingCoefficient + 1f);
         }
     }
 }

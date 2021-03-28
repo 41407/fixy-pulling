@@ -21,10 +21,12 @@ namespace Fixy
         [SerializeField] private AnimationCurve pedalingStrengthOverCadence = AnimationCurve.Constant(0, 90, 1f);
 
         [SerializeField] private float pedalingStrength = 0.1f;
+        private float mashingCoefficient;
+        [SerializeField] private float mashingStrength = 10f;
 
         private float MaximumSteering => Time.deltaTime * sensitivity.x;
 
-        private float PedalingForce => pedalingInput * CurrentPedalingStrength * Mathf.Clamp(drivetrain.GetCrankAnglePedalingStrengthModifier(), 0.1f, 1f);
+        private float PedalingForce => pedalingInput * (1f + mashingCoefficient * mashingStrength) * CurrentPedalingStrength * Mathf.Clamp(drivetrain.GetCrankAnglePedalingStrengthModifier(), 0.1f, 1f);
 
         private float CurrentPedalingStrength => pedalingStrength * pedalingStrengthOverCadence.Evaluate(drivetrain.GetCurrentCadence(rearWheel));
 
@@ -63,6 +65,8 @@ namespace Fixy
             Wheels.ForEach(wheel => wheel.SetSpeed(speed));
 
             drivetrain.SetCrankAngle(rearWheel);
+            mashingCoefficient = Mathf.Min(mashingCoefficient, drivetrain.GetCrankAnglePedalingStrengthModifier());
+            drivetrain.SetMashingCoefficient(mashingCoefficient);
         }
 
         private void Turn()
@@ -93,7 +97,14 @@ namespace Fixy
         private void HandleInput()
         {
             steering = Input.GetAxis("Horizontal") * Time.deltaTime * sensitivity.x;
-            pedalingInput = Input.GetAxisRaw("Vertical") * Time.deltaTime * sensitivity.y;
+            var pedalingInput = Input.GetAxisRaw("Vertical") * Time.deltaTime * sensitivity.y;
+            if (this.pedalingInput <= 0.01f && pedalingInput > 0)
+            {
+                mashingCoefficient = drivetrain.GetCrankAnglePedalingStrengthModifier();
+                Debug.Log($"We mashing at {mashingCoefficient * 100f} % effieciency!");
+            }
+
+            this.pedalingInput = pedalingInput;
         }
     }
 

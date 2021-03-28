@@ -4394,6 +4394,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   pedalingStrength: 0.1
+  mashingStrength: 5
 --- !u!4 &1980822747
 Transform:
   m_ObjectHideFlags: 0

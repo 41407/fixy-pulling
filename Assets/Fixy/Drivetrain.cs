@@ -6,9 +6,10 @@ namespace Fixy
     {
         void SetCrankAngle(IRearWheel rearWheel);
         float GetCrankAngle();
-        float GetCadence(float speed);
         float GetCurrentCadence(IRearWheel rearWheel);
         float GetCrankAnglePedalingStrengthModifier();
+        void SetMashingCoefficient(float mashingCoefficient);
+        float MashingCoefficient { get; }
     }
 
     public class Drivetrain : MonoBehaviour, IDrivetrain
@@ -27,10 +28,7 @@ namespace Fixy
 
         public float GetCrankAngle() => CrankAngle;
 
-        public float GetCadence(float speed)
-        {
-            throw new System.NotImplementedException();
-        }
+        public float MashingCoefficient { get; private set; }
 
         public float GetCurrentCadence(IRearWheel rearWheel)
         {
@@ -42,6 +40,11 @@ namespace Fixy
         {
             var pedalingStrengthModifier = (1 + Mathf.Cos((GetCrankAngle() + 90f) / 90f * Mathf.PI)) / 2f;
             return pedalingStrengthModifier;
+        }
+
+        public void SetMashingCoefficient(float mashingCoefficient)
+        {
+            MashingCoefficient = mashingCoefficient;
         }
 
         private float GetCadenceRpm(IRearWheel rearWheel)
