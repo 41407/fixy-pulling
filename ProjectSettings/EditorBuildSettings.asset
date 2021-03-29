@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/fixy-scene.unity
+    guid: f473109cdb47b486eb1ca5a03e4c18d5
   m_configObjects: {}

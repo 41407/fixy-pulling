@@ -24,6 +24,7 @@ namespace Fixy
         public void SetCrankAngle(IRearWheel rearWheel)
         {
             CrankAngle = rearWheel.CurrentAngle / GearRatio;
+            while (CrankAngle > 360) CrankAngle -= 360;
         }
 
         public float GetCrankAngle() => CrankAngle;

@@ -23,6 +23,8 @@ namespace Fixy
         [SerializeField] private float pedalingStrength = 0.1f;
         private float mashingCoefficient;
         [SerializeField] private float mashingStrength = 10f;
+        private bool isSkidding;
+        [SerializeField] private float skiddingDeceleration;
 
         private float MaximumSteering => Time.deltaTime * sensitivity.x;
 
@@ -45,24 +47,34 @@ namespace Fixy
 
         private void Steer()
         {
-            transform.Rotate(0, 0, -steering * Mathf.Clamp01(speed), Space.Self);
+            var steeringEffect = -1f * steering;
+            var spinningEffect = pedalingInput * (180 - drivetrain.GetCrankAngle()) / 90f;
+            var mashingEffect = mashingCoefficient * Mathf.Sign(spinningEffect);
+            transform.Rotate(0, 0, steeringEffect + spinningEffect + mashingEffect * Mathf.Clamp01(speed), Space.Self);
         }
 
         private void Push()
         {
-            if (IsPedalingForward)
+            if (isSkidding)
+            {
+                speed = Mathf.MoveTowards(speed, 0f, skiddingDeceleration * Time.deltaTime);
+                Wheels.ForEach(wheel => wheel.SetSpeed(speed));
+                rearWheel.SetSpeed(0f);
+            }
+            else if (IsPedalingForward)
             {
                 speed += PedalingForce;
+                Wheels.ForEach(wheel => wheel.SetSpeed(speed));
             }
             else if (IsPedalingBackwards)
             {
                 speed += PedalingForce / 2f;
+                Wheels.ForEach(wheel => wheel.SetSpeed(speed));
             }
 
             speed -= rollingResistanceAcceleration.Evaluate(speed) * Time.fixedDeltaTime;
 
             transform.Translate(0, 0, speed * Time.fixedDeltaTime);
-            Wheels.ForEach(wheel => wheel.SetSpeed(speed));
 
             drivetrain.SetCrankAngle(rearWheel);
             mashingCoefficient = Mathf.Min(mashingCoefficient, drivetrain.GetCrankAnglePedalingStrengthModifier());
@@ -81,7 +93,7 @@ namespace Fixy
             Turn(turnRate);
             StraightenRoll(rollReduction);
 
-            fork.SetAngle(turnRate * 3f * Mathf.Max(1f, 20f - speed));
+            fork.SetAngle(turnRate * 3f * Mathf.Max(1f, 10f - speed));
         }
 
         private void StraightenRoll(float rollReduction)
@@ -98,10 +110,20 @@ namespace Fixy
         {
             steering = Input.GetAxis("Horizontal") * Time.deltaTime * sensitivity.x;
             var pedalingInput = Input.GetAxisRaw("Vertical") * Time.deltaTime * sensitivity.y;
-            if (this.pedalingInput <= 0.01f && pedalingInput > 0)
+            if (mashingCoefficient <= 0.01f && this.pedalingInput <= 0.01f && pedalingInput > 0)
             {
                 mashingCoefficient = drivetrain.GetCrankAnglePedalingStrengthModifier();
-                Debug.Log($"We mashing at {mashingCoefficient * 100f} % effieciency!");
+            }
+
+            if (mashingCoefficient > 0 && pedalingInput < 0)
+            {
+                isSkidding = true;
+                mashingCoefficient = 0f;
+            }
+
+            if (isSkidding && pedalingInput >= 0f)
+            {
+                isSkidding = false;
             }
 
             this.pedalingInput = pedalingInput;

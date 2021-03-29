@@ -2827,7 +2827,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1229143101}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
@@ -4349,12 +4349,12 @@ MonoBehaviour:
       outWeight: 0.122299656
     - serializedVersion: 3
       time: 22
-      value: 10.099434
-      inSlope: 1.360822
-      outSlope: 1.360822
+      value: 4.9068007
+      inSlope: 0.43335345
+      outSlope: 0.43335345
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.05141965
+      inWeight: 0.064665176
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -4364,22 +4364,40 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: -0
-      value: 0.29918972
-      inSlope: 0.000079110134
-      outSlope: 0.000079110134
+      time: 0
+      value: 0.39117092
+      inSlope: 0.000046557347
+      outSlope: 0.000046557347
       tangentMode: 0
-      weightedMode: 0
+      weightedMode: 2
       inWeight: 0.33333334
-      outWeight: 0.43830046
+      outWeight: 0.51817346
+    - serializedVersion: 3
+      time: 30.05135
+      value: 0.48864067
+      inSlope: 0.01797674
+      outSlope: 0.01797674
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.2086396
+      outWeight: 0.28599948
+    - serializedVersion: 3
+      time: 69.468605
+      value: 0.6918318
+      inSlope: 0.00808369
+      outSlope: 0.00808369
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.38835505
+      outWeight: 0.29575518
     - serializedVersion: 3
       time: 90
       value: 0.9999964
-      inSlope: 0.00011192173
-      outSlope: 0.00011192173
+      inSlope: -0.00051777245
+      outSlope: -0.00051777245
       tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
+      weightedMode: 1
+      inWeight: 0.3739704
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 150
@@ -4394,7 +4412,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   pedalingStrength: 0.1
-  mashingStrength: 5
+  mashingStrength: 2
+  skiddingDeceleration: 2
 --- !u!4 &1980822747
 Transform:
   m_ObjectHideFlags: 0
