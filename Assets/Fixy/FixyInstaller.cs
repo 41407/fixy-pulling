@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using UnityEngine;
+using Zenject;
 
 namespace Fixy
 {
@@ -6,6 +7,7 @@ namespace Fixy
     {
         public override void InstallBindings()
         {
+            Container.Bind<AudioSource>().FromComponentSibling().AsTransient();
             Container.Bind<IFixyController>().FromComponentInHierarchy().AsSingle();
             Container.Bind<IPlayerPosition>().FromComponentInHierarchy().AsSingle();
             Container.Bind<IWheel>().FromComponentsInHierarchy().AsTransient();

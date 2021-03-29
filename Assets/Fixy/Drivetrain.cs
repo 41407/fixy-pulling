@@ -10,6 +10,7 @@ namespace Fixy
         float GetCrankAnglePedalingStrengthModifier();
         void SetMashingCoefficient(float mashingCoefficient);
         float MashingCoefficient { get; }
+        bool IsBraking { get; set; }
     }
 
     public class Drivetrain : MonoBehaviour, IDrivetrain
@@ -30,6 +31,7 @@ namespace Fixy
         public float GetCrankAngle() => CrankAngle;
 
         public float MashingCoefficient { get; private set; }
+        public bool IsBraking { get; set; }
 
         public float GetCurrentCadence(IRearWheel rearWheel)
         {

@@ -64,12 +64,18 @@ namespace Fixy
             else if (IsPedalingForward)
             {
                 speed += PedalingForce;
+                drivetrain.IsBraking = false;
                 Wheels.ForEach(wheel => wheel.SetSpeed(speed));
             }
             else if (IsPedalingBackwards)
             {
                 speed += PedalingForce / 2f;
+                drivetrain.IsBraking = true;
                 Wheels.ForEach(wheel => wheel.SetSpeed(speed));
+            }
+            else
+            {
+                drivetrain.IsBraking = false;
             }
 
             speed -= rollingResistanceAcceleration.Evaluate(speed) * Time.fixedDeltaTime;
@@ -115,7 +121,7 @@ namespace Fixy
                 mashingCoefficient = drivetrain.GetCrankAnglePedalingStrengthModifier();
             }
 
-            if (mashingCoefficient > 0 && pedalingInput < 0)
+            if (mashingCoefficient > 0.5f && pedalingInput < 0)
             {
                 isSkidding = true;
                 mashingCoefficient = 0f;
